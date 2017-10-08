@@ -1,0 +1,33 @@
+---
+title: "2017-10-7 HW3_Q3"
+author: "Ethan M. Lotz"
+date: "October 7, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 3
+
+3.) Suppose your microarray imaging software stores your pixel level data as a 16 bit digital image.
+
+a. How many possible pixel values are there? 
+```{r}
+PixelNumber = 2**16
+PixelNumber
+```
+
+b. What is the range of these pixel values?
+```{r}
+PixelRange = range(0:65535)
+PixelRange
+```
+
+c. How would a pixel with an intensity of 5312 be stored using 16 bits?
+
+```{r}
+paste("0001010011000000")
+((2**15)*0)+((2**14)*0)+((2**13)*0)+((2**12)*1)+((2**11)*0)+((2**10)*1)+((2**9)*0)+((2**8)*0)+((2**7)*1)+((2**6)*1)+((2**5)*0)+((2**4)*0)+((2**3)*0)+((2**2)*0)+((2**1)*0)+((2**0)*0)
+```

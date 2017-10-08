@@ -1,0 +1,71 @@
+---
+title: "2017-10-7 HW3_Q5"
+author: "Ethan M. Lotz"
+date: "October 7, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 5
+
+5.) The following table consists of pixel level intensities for one spot patch area (these data are also available
+in hmwk3.csv). In addition, those pixels outside the mask (circle/spot) have been labeled “O” while pixels in
+the interior of the mask have been labeled “I”. Enter all data into the R programming environment (do NOT
+use scan()). For these data, use the Mann-Whitney segmentation method to identify foreground and background pixels;
+note the eight sampled background pixels have been identified for you in the third column. If you fail to
+reject H0 let the number of pixels to discard equal 2. Once you have identified foreground pixels, calculate
+the median intensity.
+
+```{r}
+Q5 <- read.csv("hmwk3.csv", header=TRUE)
+y <- ifelse(Q5$Sample.background=="Yes", as.vector(Q5$Pixel.intensity), 0)
+y <- y[! y %in% 0]
+
+x <- ifelse(Q5$Sample.background!="Yes", as.vector(Q5$Pixel.intensity), 0)
+x <- x[! x %in% 0]
+x <- x[order(x)]
+x
+samplex <- x[1:8]
+samplex
+wilcox.test(samplex, y, alternative = "greater")
+```
+
+Fail to reject H0 so let the number of pixels to discard equal 2.
+```{r}
+samplex <- x[3:10]
+samplex
+wilcox.test(samplex, y, alternative = "greater")
+```
+
+Fail to reject H0 so let the number of pixels to discard equal 2.
+```{r}
+samplex <- x[5:12]
+samplex
+wilcox.test(samplex, y, alternative = "greater")
+```
+
+Fail to reject H0 so let the number of pixels to discard equal 2.
+```{r}
+samplex <- x[7:14]
+samplex
+wilcox.test(samplex, y, alternative = "greater")
+```
+
+```{r}
+samplex <- x[9:16]
+samplex
+wilcox.test(samplex, y, alternative = "greater")
+```
+
+Reject H0 in favor of the alternative
+```{r}
+TrueForeground <- x[order(x)][9:length(x)]
+TrueForeground
+
+Median.Intensity <- median(TrueForeground)
+Median.Intensity
+```
+

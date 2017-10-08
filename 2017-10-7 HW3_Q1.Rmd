@@ -1,0 +1,21 @@
+---
+title: "2017-10-7 HW3_Q1"
+author: "Ethan M. Lotz"
+date: "October 7, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 1
+
+1.) In R, write a function that will accept a character string representing a nucleic acid sequence and outputs
+the corresponding mRNA strand. Note that the sequence may consist of both upper and lower case letters.
+
+```{r}
+DNA2mRNA <- function(s){gsub("T","U",toupper(s))}
+
+DNA2mRNA("atcg")
+```

@@ -1,0 +1,72 @@
+---
+title: "2017-10-7 HW3_Q4"
+author: "Ethan M. Lotz"
+date: "October 7, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(data.table)
+```
+
+## Question 4
+
+4.) The PixelData.csv file contains pixel level foreground intensities for different probe sets; for this example,
+each probe set consists of 20 probes. The probe sets are identifiable by the field ‘ProbeSet’ while the probes
+comprising the probe sets are identifiable by the combination of the ‘ProbeX’ and ‘ProbeY’ fields (which are
+the coordinates of the probe on the GeneChip). Process this raw pixel data as follows:
+
+a. Read the PixelData.csv file into the R programming environment.
+```{r}
+PixelData <- read.csv("PixelData.csv", header=TRUE)
+```
+
+b. How many different probe sets are there in this dataset?
+```{r}
+PixelData.Table <- data.table(PixelData)
+PixelData.Table[, uniqueN(ProbeSet)]
+```
+
+c. Write a function that will calculate probe cell intensity using the Affymetrix method (the 75th percentile
+of the pixel intensities). Apply this function to obtain probe cell intensity for all probes in this dataset.
+```{r}
+AffProbeCellIntensity <- function(DT){
+with(DT, aggregate(Intensity ~ ProbeX + ProbeY,  FUN=function(x){quantile(x,0.75, names=FALSE)}))
+}
+
+AffProbeCellIntensity(PixelData)
+```
+
+d. Write a function to calculate a trimmed mean using the exact formula. Apply this function to the
+dataset to obtain probe cell intensities for all probes in this dataset, using a trimming percentage of
+30%.
+```{r}
+TrimProbeCellIntensity <- function(DT){
+  with(DT, aggregate(Intensity ~ ProbeX + ProbeY, FUN=function(x){mean(x, trim=0.3)}))
+}
+TrimProbeCellIntensity(PixelData)
+```
+
+e. Plot the log2 transformed results from part (c) on the x-axis against the log2 transformed results from
+part (d) on the y-axis. What do you conclude about the agreement of the two methods in this example?
+```{r}
+a <- AffProbeCellIntensity(PixelData)
+a[,"log2"] <- log2(a$Intensity)
+b <- TrimProbeCellIntensity(PixelData)
+b[,"log2"] <- log2(b$Intensity)
+plot(a$log2,b$log2, xlab = "log2 Transform of 75th Percentile", ylab = "log2 Transform of 30% Trimmed Mean" )
+```
+
+Investigate any problem probes if needed and discuss what attributes to any observed differences.
+```{r}
+plot(a$log2, b$log2, xlab = "log2 Transform of 75th Percentile", ylab = "log2 Transform of 30% Trimmed Mean" )
+points(a$log2[13], b$log2[13], col="red", pch=19)
+points(a$log2[44], b$log2[44], col="red", pch=19)
+points(a$log2[48], b$log2[48], col="red", pch=19)
+points(a$log2[56], b$log2[56], col="red", pch=19)
+```
+
+There are four points (highlighted in red) that do not follow the linear trend. The observed differences are due to the fact that the 30% trimmed mean and the 75th percentile did not lead to similar intensities. The "problem probes" are the first four probes listed in the original data set. Looking through these data it seems as though the intensities have a large amount of variability compared to the other groups or do not follow a normal distribution.
+
+

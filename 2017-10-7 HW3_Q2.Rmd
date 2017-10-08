@@ -1,0 +1,27 @@
+---
+title: "2017-10-7 HW3_Q2"
+author: "Ethan M. Lotz"
+date: "October 7, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(stringr)
+```
+
+## Question 2
+
+2.) In R, write a function that will accept a character string representing a nucleic acid sequence and outputs
+the percent of bases that are either G or C (GC content). Note that the sequence may consist of both upper
+and lower case letters.
+
+```{r}
+GCcontent <- function(s){
+  s=toupper(s)
+  a=str_count(s,"G")+str_count(s,"C")
+  (a/nchar(s))*100
+  }
+
+GCcontent("atcg")
+```
